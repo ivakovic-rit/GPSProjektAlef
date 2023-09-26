@@ -1,5 +1,7 @@
 from tkinter import INSERT
 import mysql.connector;
+import gpxpy
+import gpxpy.gpx
 
 
 dbConnection = mysql.connector.connect(host='localhost', user='root', password='')
@@ -91,3 +93,34 @@ def saveTrackRecordToDb(gpxdatei, dateiname):
                 queryString = f"INSERT INTO `punkt` (`lat`, `lon`, `ele`, `datumZeit`, `tid`) VALUES ('{lat}', '{lon}', '{ele}', '{datumZeit}', '{tid}');"
                 cursor.execute(queryString)
                 dbConnection.commit()
+
+
+def GetPunktDataFromDb(polkz, vonDatum, bisDatum) -> list:
+    queryString = f"SELECT fid FROM fahrzeug WHERE polKZ = '{polkz}'"
+    cursor.execute(queryString)
+    if (cursor.rowcount == 0):
+        return []
+    fid = cursor.fetchone()[0]
+    queryString1 = f"SELECT tid FROM track WHERE fid = '{fid}'"
+    cursor.execute(queryString1)
+    if (cursor.rowcount == 0):
+        return []
+    tid = cursor.fetchone()[0]
+    queryString2 = f"SELECT lat, lon FROM punkt WHERE tid = '{tid}'"
+    cursor.execute(queryString2)
+    if (cursor.rowcount == 0):
+        return []
+    return cursor.fetchall()
+
+
+def getKfzPlatesFromDb() -> list: 
+    queryString = f"SELECT polKZ FROM fahrzeug"
+    cursor.execute(queryString)
+    if (cursor.rowcount == 0):
+        return []
+    plates:list = cursor.fetchall()
+    for i in range(len(plates)):
+        plates[i] = plates[i][0].replace(" ", "")
+    
+    plates.insert(0, "Auswählen...")
+    return plates

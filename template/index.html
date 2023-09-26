@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
     <title>School Project</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
+
 <body>
     <div class="container mt-5">
         <h1>School Project</h1>
+        {% if shouldshowIframe %}
+        <iframe src="{{map_file}}" width="100%" height="400"></iframe>
+        {% endif %}
         <form method="POST">
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" class="form-control" id="name" name="name">
-            </div>
+            </div> -->
             <div class="form-group">
                 <label for="kfz">KFZ:</label>
                 <input type="text" class="form-control" id="kfz" name="kfz">
             </div>
+            <select class="form-control" id="kfz" name="kfz">
+                {% for plate in kfzPlates %}
+                    <option value="{{ KFZ }}">{{ plate }}</option>
+                {% endfor %}
+            </select>
             <div class="form-group">
                 <label for="von_datum">Von Datum:</label>
                 <input type="date" class="form-control" id="von_datum" name="von_datum">
@@ -25,8 +35,11 @@
                 <label for="bis_datum">Bis Datum:</label>
                 <input type="date" class="form-control" id="bis_datum" name="bis_datum">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Suchen</button>
         </form>
     </div>
+    <div>
+    </div>
 </body>
+
 </html>
