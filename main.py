@@ -22,17 +22,18 @@ def index():
 
         print(f'Name: {name}, KFZ: {kfz}, Von Datum: {von_datum}, Bis Datum: {bis_datum}')
         path_points: list = GetPunktDataFromDb(kfz, von_datum, bis_datum)
-        if path_points.count == 0: shouldshowIframe = False
-        else: shouldshowIframe = True
-        m = folium.Map(location=path_points[0], zoom_start=12)
+        if not path_points or path_points.count == 0: 
+            shouldshowIframe = False
+        else: 
+            shouldshowIframe = True
+            m = folium.Map(location=path_points[0], zoom_start=12)
 
-        path = folium.PolyLine(locations=path_points, color='blue', weight=5)
-        path.add_to(m)
+            path = folium.PolyLine(locations=path_points, color='blue', weight=5)
+            path.add_to(m)
 
-        m.save(map_file)
+            m.save(map_file)
 
     return render_template('index.html', map_file=map_file, shouldshowIframe=shouldshowIframe, kfzPlates = kfzPlates)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

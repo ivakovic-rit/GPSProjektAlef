@@ -106,7 +106,8 @@ def GetPunktDataFromDb(polkz, vonDatum, bisDatum) -> list:
     if (cursor.rowcount == 0):
         return []
     tid = cursor.fetchone()[0]
-    queryString2 = f"SELECT lat, lon FROM punkt WHERE tid = '{tid}'"
+    if vonDatum and bisDatum: queryString2 = f"SELECT lat, lon FROM punkt WHERE tid = '{tid}' and datumZeit BETWEEN '{vonDatum}' AND '{bisDatum}'"
+    else: queryString2 = f"SELECT lat, lon FROM punkt WHERE tid = '{tid}'"
     cursor.execute(queryString2)
     if (cursor.rowcount == 0):
         return []
