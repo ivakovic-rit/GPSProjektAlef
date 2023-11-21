@@ -12,7 +12,7 @@ def index():
     path_points = []
     map_file = "./static/path_only_map.html"
     shouldshowIframe = False
-    kfzPlates:list = getKfzPlatesFromDb()
+    kfzPlates:list = GetKfzPlatesFromDb()
     
     if request.method == 'POST':
         name = request.form.get('name')
@@ -26,7 +26,7 @@ def index():
             shouldshowIframe = False
         else: 
             shouldshowIframe = True
-            m = folium.Map(location=path_points[0], zoom_start=12)
+            m = folium.Map(location=path_points[0], zoom_start=17)
 
             path = folium.PolyLine(locations=path_points, color='blue', weight=5)
             path.add_to(m)
@@ -37,17 +37,3 @@ def index():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# def main():
-#     counter = 0
-#     directory = "gpx-Dateien"
-#     for filename in os.listdir(directory):
-#         if not filename.endswith(".gpx") or isTrackInDatabase(filename): continue
-#         gpx_file = open(directory + "/" + filename, 'r')
-#         saveTrackRecordToDb(gpx_file, filename)
-#         counter += 1
-
-#     print(f'Anzahl der Dateien: {counter}')
-
-# if __name__ == '__main__':
-#     main()

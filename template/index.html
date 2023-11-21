@@ -3,23 +3,23 @@
 
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='index_style.css') }}">
-    <title>School Project</title>
+    <title>GPX-Daten</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1>GPS-Daten</h1>
+    <script src="/static/main.js"></script>
+    <main id="mainId">
+        <p id="weihnachtsmodus" onclick="createSnow(35, true)">In Weihnachtsmodus wechseln</p>
+    </main>
+    <div class="container mt-5" id="mainDivId">
+        <h1>GPX-Daten</h1>
         {% if shouldshowIframe %}
-        <iframe src="{{map_file}}" width="100%" height="400"></iframe>
+        <iframe id="mapIframeId" src="{{map_file}}" width="100%" height="400" onload="mapOnLoad()"></iframe>
         {% endif %}
         <form method="POST">
-            <!-- <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" name="name">
-            </div> -->
             <div class="form-group">
-                <label for="kfz">KFZ:</label>
+                <label for="kfz" id="test">Wähle ein KFZ aus:</label>
                 <select class="form-control" id="kfz" name="kfz">
                     {% for plate in kfzPlates %}
                     <option value="{{ plate }}">{{ plate }}</option>
@@ -27,30 +27,21 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="von_datum">Von Datum:</label>
+                <label for="von_datum">Beginn:</label>
                 <input type="date" class="form-control" id="von_datum" name="von_datum">
             </div>
             <div class="form-group">
-                <label for="bis_datum">Bis Datum:</label>
+                <label for="bis_datum">Ende:</label>
                 <input type="date" class="form-control" id="bis_datum" name="bis_datum">
             </div>
-            <button type="submit" class="btn btn-primary">Suchen</button>
-        {% if shouldshowIframe %}
-            <button type="button" class="btn btn-primary" onclick="history.back()"> Zurück </button>
-        {% endif %}
+            <button type="submit" id="submitButton" class="btn btn-primary" onclick="searchFunction()">Suchen</button>
+            {% if shouldshowIframe %}
+            <button type="button" class="btn btn-primary" onclick="goBackFunction()">Zurück </button>
+            {% endif %}
         </form>
     </div>
     <div>
     </div>
 </body>
-<script>
-    function formatGermanDate(input) {
-        if (input.value) {
-            const date = new Date(input.value);
-            const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            const formattedDate = date.toLocaleDateString('de-DE', options);
-            input.value = formattedDate;
-        }
-    }
-    </script>
+
 </html>

@@ -1,69 +1,150 @@
 /* Add some basic styling to the body */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 h1 {
-    text-align: center;
-    color: #333;
+  text-align: center;
+  color: #333;
 }
 
 /* Style form elements */
 .form-group {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 input[type="text"],
 input[type="date"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 button[type="submit"] {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    width: 50%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  padding: 8px;
+  background-color: #007bff;
+  width: 350px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 button[type="button"] {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-    padding: 10px;
-    margin-top: 5px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  padding: 8px;
+  background-color: #007bff;
+  margin-top: 10px;
+  width: 350px;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
+
 button[type="submit"]:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
+}
+
+@keyframes fall {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 100vh;
+    opacity: 1;
+  }
+}
+
+@keyframes sway {
+  0% {
+    margin-left: 0;
+  }
+
+  25% {
+    margin-left: 50px;
+  }
+
+  50% {
+    margin-left: -50px;
+  }
+
+  75% {
+    margin-left: 50px;
+  }
+
+  100% {
+    margin-left: 0;
+  }
+}
+
+#snow-container {
+  height: 100vh;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  transition: opacity 500ms;
+  width: 100%;
+}
+
+.snow {
+  animation: fall ease-in infinite, sway ease-in-out infinite;
+  color: skyblue;
+  position: absolute;
+}
+
+
+#weihnachtsmodus {
+  font-size: 15px;
+  height:40px;
+  width:349px;
+  padding: 8px;
+  background-color: black;
+  text-align: center;
+  color: #03e9f4;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  letter-spacing: 4px;
+  overflow: hidden;
+  transition: 0.5s;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+#weihnachtsmodus:hover {
+  background: #92b9f7;
+  color: #050801;
+  box-shadow: 0 0 5px #92b9f7,
+              0 0 25px #92b9f7,
+              0 0 50px #92b9f7,
+              0 0 200px #92b9f7;
+   -webkit-box-reflect:below 1px linear-gradient(transparent, #0005);
 }

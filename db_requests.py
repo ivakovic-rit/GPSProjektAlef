@@ -10,7 +10,7 @@ goToDatabaseString = "USE gpx_daten"
 cursor.execute(goToDatabaseString)
 
 
-def isTrackInDatabase(fileName) -> bool:
+def IsTrackInDatabase(fileName) -> bool:
     queryString = "SELECT * from track WHERE dateiname = '" + fileName + "'"
     cursor.execute(queryString)
     row_count = cursor.rowcount
@@ -19,7 +19,7 @@ def isTrackInDatabase(fileName) -> bool:
         return False
     return True
 
-def isPersonInDatabase(name) -> bool:
+def IsPersonInDatabase(name) -> bool:
     queryString = "SELECT * from person WHERE vorname = '" + name + "'"
     cursor.execute(queryString)
     row_count = cursor.rowcount
@@ -28,7 +28,7 @@ def isPersonInDatabase(name) -> bool:
         return False
     return True
 
-def isVehicleInDatabase(licensePlateNumber) -> bool:
+def IsVehicleInDatabase(licensePlateNumber) -> bool:
     queryString = "SELECT * from fahrzeug WHERE polKZ = '" + licensePlateNumber + "'"
     cursor.execute(queryString)
     row_count = cursor.rowcount
@@ -38,36 +38,36 @@ def isVehicleInDatabase(licensePlateNumber) -> bool:
     return True
 
 
-def savePersonToDb(name) -> int:
-    if not (isPersonInDatabase(name)):
+def SavePersonToDb(name) -> int:
+    if not (IsPersonInDatabase(name)):
         queryString = f"INSERT INTO `person` (`vorname`) VALUES ('{name}');"
         cursor.execute(queryString)
         dbConnection.commit()
         return cursor.lastrowid
 
-def saveVehicleToDb(licensePlateNumber) -> int:
-    if not (isVehicleInDatabase(licensePlateNumber)):
+def SaveVehicleToDb(licensePlateNumber) -> int:
+    if not (IsVehicleInDatabase(licensePlateNumber)):
         queryString = f"INSERT INTO `fahrzeug` (`polKZ`) VALUES ('{licensePlateNumber}');"
         cursor.execute(queryString)
         dbConnection.commit()
         return cursor.lastrowid
     
-def saveTrackRecordToDb(gpxdatei, dateiname): 
+def ImportRecordsToDB(gpxdatei, dateiname): 
     pid = 0
     fid = 0
 
     name = dateiname[0:2]
     licensePlateNumber = dateiname[3:11]
 
-    if not (isPersonInDatabase(name)):
-        pid = savePersonToDb(name)
+    if not (IsPersonInDatabase(name)):
+        pid = SavePersonToDb(name)
     else: 
         queryString = f"SELECT pid FROM person WHERE vorname = '{name}'"
         cursor.execute(queryString)
         pid = cursor.fetchone()[0]
     
-    if not (isVehicleInDatabase(licensePlateNumber)):
-        fid = saveVehicleToDb(licensePlateNumber)
+    if not (IsVehicleInDatabase(licensePlateNumber)):
+        fid = SaveVehicleToDb(licensePlateNumber)
     
     else:
         queryString = f"SELECT fid FROM fahrzeug WHERE polKZ = '{licensePlateNumber}'"
@@ -96,25 +96,22 @@ def saveTrackRecordToDb(gpxdatei, dateiname):
 
 
 def GetPunktDataFromDb(polkz, vonDatum, bisDatum) -> list:
-    queryString = f"SELECT fid FROM fahrzeug WHERE polKZ = '{polkz}'"
-    cursor.execute(queryString)
-    if (cursor.rowcount == 0):
-        return []
-    fid = cursor.fetchone()[0]
-    queryString1 = f"SELECT tid FROM track WHERE fid = '{fid}'"
-    cursor.execute(queryString1)
-    if (cursor.rowcount == 0):
-        return []
-    tid = cursor.fetchone()[0]
-    if vonDatum and bisDatum: queryString2 = f"SELECT lat, lon FROM punkt WHERE tid = '{tid}' and datumZeit BETWEEN '{vonDatum}' AND '{bisDatum}'"
-    else: queryString2 = f"SELECT lat, lon FROM punkt WHERE tid = '{tid}'"
-    cursor.execute(queryString2)
+    queryString = """
+        SELECT p.lat, p.lon
+        FROM fahrzeug f
+        JOIN track t ON f.fid = t.fid
+        JOIN punkt p ON t.tid = p.tid
+        WHERE f.polKZ = %s
+        AND (%s IS NULL OR p.datumZeit BETWEEN %s AND %s)
+    """
+    parameters = (polkz, vonDatum, vonDatum, bisDatum) if vonDatum and bisDatum else (polkz, None, None, None)
+    cursor.execute(queryString, parameters)
     if (cursor.rowcount == 0):
         return []
     return cursor.fetchall()
 
 
-def getKfzPlatesFromDb() -> list: 
+def GetKfzPlatesFromDb() -> list: 
     queryString = f"SELECT polKZ FROM fahrzeug"
     cursor.execute(queryString)
     if (cursor.rowcount == 0):
